@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Button } from '@/components/ui/button';
+import { GlowButton } from '@/components/ui/glow-button';
 import { SyncResponse, SyncState } from '@/lib/types';
 import { RefreshCw, Check, Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
@@ -109,19 +109,17 @@ export function SyncButton({ onSyncComplete }: SyncButtonProps) {
   const isError = syncState.status === 'error';
 
   return (
-    <div className="flex flex-col gap-3">
-      <Button
-        onClick={handleSync}
-        disabled={isSyncing}
-        className="bg-purple-600 hover:bg-purple-700 text-white font-semibold gap-2"
-      >
-        {isSyncing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <RefreshCw className="h-4 w-4" />
-        )}
-        {isSyncing ? 'Syncing...' : 'Sync Gmail'}
-      </Button>
+      <div className={`flex flex-col gap-3 ${isSyncing ? 'pointer-events-none opacity-60' : ''}`}>
+      <GlowButton onClick={handleSync}>
+        <span className="flex items-center gap-2">
+          {isSyncing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          {isSyncing ? 'Syncing...' : 'Sync Gmail'}
+        </span>
+      </GlowButton>
 
       <AnimatePresence>
         {(isSyncing || isComplete || isError) && (

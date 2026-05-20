@@ -43,7 +43,7 @@ export function EmailCard({ email, animationDelay = 0 }: EmailCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.35, delay: animationDelay }}
       whileHover={{ y: -1 }}
-      className={`relative bg-slate-900/60 border border-slate-800/80 border-l-4 ${accent.border} rounded-xl p-4 cursor-pointer ${accent.bg} hover:border-slate-700 transition-all duration-200 shadow-lg ${accent.glow} hover:shadow-xl backdrop-blur-sm`}
+      className={`relative bg-slate-900/80 border border-slate-800/80 border-l-4 ${accent.border} rounded-xl p-4 cursor-pointer ${accent.bg} hover:border-slate-700 transition-all duration-200 shadow-lg ${accent.glow} hover:shadow-xl backdrop-blur-sm`}
       onClick={() => setExpanded(!expanded)}
     >
       {/* Header */}

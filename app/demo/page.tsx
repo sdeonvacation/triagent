@@ -59,6 +59,7 @@ export default function DemoPage() {
   return (
     <div className="relative min-h-screen">
       <AuroraBorealis />
+      <div className="fixed inset-0 z-[1] bg-slate-950/50 pointer-events-none" />
       <div className="relative z-10">
       {/* Header */}
       <header className="sticky top-0 z-50 border-b border-slate-800/60 bg-black/70 backdrop-blur-md">

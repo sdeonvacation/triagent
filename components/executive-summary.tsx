@@ -1,6 +1,7 @@
 import { ExecutiveSummaryData } from '@/lib/types';
 import { ProcessedBadge } from '@/components/processed-badge';
 import { Inbox, AlertTriangle, Tag, BarChart2 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface ExecutiveSummaryProps {
   data: ExecutiveSummaryData;
@@ -11,57 +12,41 @@ const stats = (data: ExecutiveSummaryData) => [
     label: 'Total Processed',
     value: data.totalProcessed,
     icon: Inbox,
-    accent: 'blue',
-    accentClasses: {
-      border: 'border-blue-500/30',
-      bg: 'from-blue-500/10 to-slate-900/80',
-      icon: 'bg-blue-500/15 border-blue-500/30',
-      iconColor: 'text-blue-400',
-      line: 'via-blue-500',
-      value: 'text-blue-300',
-    },
+    neonColor: 'via-blue-500',
+    card: 'bg-blue-500/5 border-blue-500/20',
+    iconClass: 'bg-blue-500/10 border-blue-500/25 text-blue-400',
+    valueClass: 'text-blue-200',
+    labelClass: 'text-blue-300/70',
   },
   {
     label: 'Escalations',
     value: data.escalationCount,
     icon: AlertTriangle,
-    accent: 'red',
-    accentClasses: {
-      border: data.escalationCount > 0 ? 'border-red-500/30' : 'border-slate-700/50',
-      bg: data.escalationCount > 0 ? 'from-red-500/10 to-slate-900/80' : 'from-slate-800/50 to-slate-900/80',
-      icon: data.escalationCount > 0 ? 'bg-red-500/15 border-red-500/30' : 'bg-slate-700/30 border-slate-700',
-      iconColor: data.escalationCount > 0 ? 'text-red-400' : 'text-slate-500',
-      line: data.escalationCount > 0 ? 'via-red-500' : 'via-slate-700',
-      value: data.escalationCount > 0 ? 'text-red-300' : 'text-slate-400',
-    },
+    neonColor: data.escalationCount > 0 ? 'via-red-500' : 'via-slate-600',
+    card: data.escalationCount > 0 ? 'bg-red-500/5 border-red-500/20' : 'bg-slate-800/20 border-slate-700/30',
+    iconClass: data.escalationCount > 0 ? 'bg-red-500/10 border-red-500/25 text-red-400' : 'bg-slate-700/20 border-slate-700 text-slate-500',
+    valueClass: data.escalationCount > 0 ? 'text-red-200' : 'text-slate-400',
+    labelClass: data.escalationCount > 0 ? 'text-red-300/70' : 'text-slate-500',
   },
   {
     label: 'Top Category',
     value: data.topCategory,
     icon: Tag,
-    accent: 'purple',
-    accentClasses: {
-      border: 'border-purple-500/30',
-      bg: 'from-purple-500/10 to-slate-900/80',
-      icon: 'bg-purple-500/15 border-purple-500/30',
-      iconColor: 'text-purple-400',
-      line: 'via-purple-500',
-      value: 'text-purple-300',
-    },
+    neonColor: 'via-purple-500',
+    card: 'bg-purple-500/5 border-purple-500/20',
+    iconClass: 'bg-purple-500/10 border-purple-500/25 text-purple-400',
+    valueClass: 'text-purple-200',
+    labelClass: 'text-purple-300/70',
   },
   {
     label: 'Avg Confidence',
     value: `${Math.round(data.avgConfidence * 100)}%`,
     icon: BarChart2,
-    accent: 'emerald',
-    accentClasses: {
-      border: 'border-emerald-500/30',
-      bg: 'from-emerald-500/10 to-slate-900/80',
-      icon: 'bg-emerald-500/15 border-emerald-500/30',
-      iconColor: 'text-emerald-400',
-      line: 'via-emerald-500',
-      value: 'text-emerald-300',
-    },
+    neonColor: 'via-emerald-500',
+    card: 'bg-emerald-500/5 border-emerald-500/20',
+    iconClass: 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400',
+    valueClass: 'text-emerald-200',
+    labelClass: 'text-emerald-300/70',
   },
 ];
 
@@ -69,24 +54,45 @@ export function ExecutiveSummary({ data }: ExecutiveSummaryProps) {
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {stats(data).map((stat) => (
-          <div
-            key={stat.label}
-            className={`relative rounded-2xl border ${stat.accentClasses.border} bg-gradient-to-br ${stat.accentClasses.bg} backdrop-blur-sm p-5 overflow-hidden`}
-          >
-            {/* top accent line */}
-            <div className={`absolute top-0 left-6 right-6 h-[2px] bg-gradient-to-r from-transparent ${stat.accentClasses.line} to-transparent`} />
-            <div className="flex items-start gap-3">
-              <div className={`w-9 h-9 rounded-lg border flex items-center justify-center shrink-0 ${stat.accentClasses.icon}`}>
-                <stat.icon className={`h-4 w-4 ${stat.accentClasses.iconColor}`} />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 font-medium mb-1">{stat.label}</p>
-                <p className={`text-2xl font-black leading-none ${stat.accentClasses.value}`}>{stat.value}</p>
+        {stats(data).map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <div
+              key={stat.label}
+              className={cn(
+                'relative group border rounded-2xl backdrop-blur-md p-5 overflow-hidden bg-slate-950/80 transition-all duration-300 hover:bg-slate-900/90 cursor-default',
+                stat.card,
+              )}
+            >
+              {/* top neon line — animates in on hover (matches button pattern) */}
+              <span className={cn(
+                'absolute top-0 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 ease-in-out',
+                stat.neonColor,
+              )} />
+              {/* top neon bloom */}
+              <span className={cn(
+                'absolute top-0 left-[12.5%] right-[12.5%] h-[6px] bg-gradient-to-r from-transparent to-transparent opacity-0 group-hover:opacity-40 transition-all duration-500 ease-in-out blur-sm',
+                stat.neonColor,
+              )} />
+
+              {/* bottom neon line — dims in on hover */}
+              <span className={cn(
+                'absolute bottom-0 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-transparent to-transparent opacity-30 group-hover:opacity-60 transition-all duration-500 ease-in-out',
+                stat.neonColor,
+              )} />
+
+              <div className="flex items-start gap-3">
+                <div className={cn('w-9 h-9 rounded-lg border flex items-center justify-center shrink-0', stat.iconClass)}>
+                  <Icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <p className={cn('text-xs font-medium mb-1', stat.labelClass)}>{stat.label}</p>
+                  <p className={cn('text-2xl font-black leading-none', stat.valueClass)}>{stat.value}</p>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
       {data.totalTimeMs > 0 && (
         <div className="flex justify-end">
